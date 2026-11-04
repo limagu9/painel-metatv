@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta do Mês — Gestão à Vista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Archivo+Narrow:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a;--panel:#1a1f28;--panel-2:#212836;--line:#2c3442;
+    --ink:#eef2f7;--ink-dim:#9aa6b6;--ink-faint:#5f6b7c;
+    --green:#3ecf8e;--amber:#f2b544;--red2:#f05a5a;--blue:#5b9df9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.35;-webkit-font-smoothing:antialiased;height:100vh;overflow:hidden;padding:1.6vh 1.8vw;display:flex;flex-direction:column;gap:1.3vh}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:1.1vh;flex:none}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:.85vw;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.3vh}
+  h1{font-family:'Archivo Narrow',sans-serif;font-weight:800;font-size:2.6vw;letter-spacing:-.01em;text-transform:uppercase;line-height:1}
+  .ref{text-align:right}
+  .ref .day{font-family:'Archivo Narrow';font-weight:800;font-size:1.7vw;line-height:1.1}
+  .ref .sub{font-family:'Space Mono',monospace;font-size:.85vw;color:var(--ink-dim)}
+  .status{display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,rgba(242,90,90,.14),rgba(242,90,90,.02));border:1px solid rgba(242,90,90,.35);border-left:4px solid var(--red2);border-radius:9px;padding:1vh 1.2vw;flex:none}
+  .status .dot{width:11px;height:11px;border-radius:50%;background:var(--red2);box-shadow:0 0 0 5px rgba(240,90,90,.18);flex:none}
+  .status .txt{font-size:1vw;color:var(--ink)}
+  .status .txt strong{font-weight:800}
+  .status .txt span{color:var(--ink-dim)}
+  .status-good{background:linear-gradient(90deg,rgba(62,207,142,.16),rgba(62,207,142,.02));border-color:rgba(62,207,142,.4);border-left-color:var(--green)}
+  .status-good .dot{background:var(--green);box-shadow:0 0 0 5px rgba(62,207,142,.18)}
+  .status-mid{background:linear-gradient(90deg,rgba(242,181,68,.16),rgba(242,181,68,.02));border-color:rgba(242,181,68,.4);border-left-color:var(--amber)}
+  .status-mid .dot{background:var(--amber);box-shadow:0 0 0 5px rgba(242,181,68,.18)}
+  .pace-piso{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--amber);z-index:3}
+  .pace-piso-lbl{position:absolute;bottom:0;white-space:nowrap;font-family:'Space Mono',monospace;font-size:.68vw;color:var(--amber);transform:translateX(-50%);background:var(--bg);padding:1px 6px;border-radius:4px;border:1px solid rgba(242,181,68,.4)}
+  .pace-wrap{position:relative;padding-top:2.8vh;padding-bottom:3vh}
+  .b-mid{background:rgba(242,181,68,.16);color:var(--amber)}
+  .wk-mid{border-color:rgba(242,181,68,.45)}
+  .wk-piso{font-family:'Space Mono',monospace;font-size:.6vw;color:var(--amber);margin-top:.2vh}
+  .compare.c3{min-width:16vw}
+  .compare.c3 div:nth-child(2){border-right:1px solid var(--line)}
+  .compare .piso{color:var(--amber)}
+  #avisoMeta{display:none;font-family:'Space Mono',monospace;font-size:.75vw;color:var(--amber);background:rgba(242,181,68,.1);border:1px solid rgba(242,181,68,.35);border-radius:8px;padding:.5vh 1vw;flex:none}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.4vh 1.3vw;display:flex;flex-direction:column;min-height:0}
+  .card h2{font-family:'Archivo Narrow';font-weight:700;font-size:.85vw;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:1vh;display:flex;align-items:center;gap:8px;flex:none}
+  .card h2::before{content:"";width:6px;height:6px;border-radius:1px;background:var(--green);display:inline-block}
+  .top{display:grid;grid-template-columns:1fr 1fr;gap:1.1vw;flex:none}
+  .gauge-card h2::before{background:var(--amber)}
+  .gauge-inner{display:flex;align-items:center;gap:1.4vw;flex:1;min-height:0}
+  .gauge{position:relative;width:15vw;max-width:260px;flex:none}
+  .gauge svg{width:100%;height:auto;overflow:visible;display:block}
+  .gauge-center{position:absolute;top:52%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%}
+  .gauge-pct{font-family:'Archivo Narrow';font-weight:800;font-size:3.1vw;line-height:1;letter-spacing:-.02em}
+  .gauge-label{font-family:'Space Mono',monospace;font-size:.62vw;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:.5vh;line-height:1.3}
+  .gauge-side{display:flex;flex-direction:column;gap:1.1vh}
+  .gv .n{font-family:'Archivo Narrow';font-weight:800;font-size:1.6vw;line-height:1}
+  .gv .l{font-family:'Space Mono',monospace;font-size:.72vw;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:.2vh}
+  .daily-card{background:linear-gradient(160deg,var(--panel-2),var(--panel))}
+  .daily-card h2::before{background:var(--amber)}
+  .daily-inner{display:flex;align-items:center;gap:1.4vw;flex:1;min-height:0}
+  .daily-left{flex:1}
+  .big-daily{font-family:'Archivo Narrow';font-weight:900;font-size:4.2vw;line-height:.9;letter-spacing:-.02em;color:var(--amber)}
+  .daily-sub{font-size:.82vw;color:var(--ink-dim);margin-top:.7vh;line-height:1.3}
+  .daily-sub b{color:var(--ink)}
+  .compare{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;flex:none;min-width:11vw}
+  .compare div{flex:1;padding:1vh .8vw;text-align:center}
+  .compare div:first-child{border-right:1px solid var(--line);background:rgba(255,255,255,.015)}
+  .compare .cn{font-family:'Archivo Narrow';font-weight:800;font-size:1.5vw;line-height:1}
+  .compare .cl{font-family:'Space Mono',monospace;font-size:.62vw;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-top:.3vh}
+  .compare .old{color:var(--ink-dim)}
+  .pace-card{flex:none}
+  .pace-card h2::before{background:var(--blue)}
+  .pace-track{position:relative;height:5vh;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;overflow:visible}
+  .pace-fill{position:absolute;top:0;left:0;bottom:0;border-radius:9px 0 0 9px;background:linear-gradient(90deg,rgba(62,207,142,.35),rgba(62,207,142,.75));border-right:2px solid var(--green);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .pace-should{position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--ink);box-shadow:0 0 0 3px rgba(18,21,26,.6);transition:left .8s}
+  .pace-should::after{content:attr(data-lbl);position:absolute;top:-2.4vh;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:.68vw;color:var(--ink);background:var(--bg);padding:1px 6px;border-radius:4px;border:1px solid var(--line)}
+  .pace-inside{position:absolute;top:50%;left:12px;white-space:nowrap;transform:translateY(-50%);font-family:'Archivo Narrow';font-weight:800;font-size:1.1vw;color:#0c130f;z-index:2}
+  .pace-labels{display:flex;justify-content:space-between;margin-top:.7vh;font-family:'Space Mono',monospace;font-size:.72vw;color:var(--ink-faint)}
+  .bottom{display:grid;grid-template-columns:1.55fr 1fr;gap:1.1vw;flex:1;min-height:0}
+  .weeks-card h2::before{background:var(--blue)}
+  .wk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8vw;flex:1;min-height:0}
+  .wk{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:1.3vh .7vw;display:flex;flex-direction:column;justify-content:space-between}
+  .wk .wk-head{display:flex;justify-content:space-between;align-items:flex-start;gap:4px}
+  .wk-num{font-family:'Archivo Narrow';font-weight:800;font-size:.85vw;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-dim);line-height:1.15}
+  .wk-badge{font-family:'Space Mono',monospace;font-size:.62vw;padding:2px 6px;border-radius:20px;font-weight:700;white-space:nowrap}
+  .b-under{background:rgba(240,90,90,.14);color:var(--red2)}
+  .b-now{background:rgba(91,157,249,.16);color:var(--blue)}
+  .b-open{background:rgba(255,255,255,.05);color:var(--ink-faint)}
+  .b-done{background:rgba(62,207,142,.16);color:var(--green)}
+  .wk-win{border-color:rgba(62,207,142,.45);background:linear-gradient(160deg,rgba(62,207,142,.10),var(--panel-2))}
+  .wk-real{font-family:'Archivo Narrow';font-weight:800;font-size:1.9vw;line-height:1;margin-top:.6vh}
+  .wk-of{font-family:'Space Mono',monospace;font-size:.68vw;color:var(--ink-faint);margin-top:.3vh}
+  .wk-bar{height:6px;background:#0e1218;border-radius:4px;margin-top:.9vh;overflow:hidden}
+  .wk-bar span{display:block;height:100%;border-radius:4px;transition:width .8s}
+  .comp-card h2::before{background:var(--green)}
+  .comp-list{display:flex;flex-direction:column;flex:1;min-height:0;justify-content:center}
+  .comp-row{display:flex;align-items:center;gap:.8vw;padding:1vh 0;border-bottom:1px solid var(--line)}
+  .comp-row:last-child{border-bottom:none}
+  .comp-icon{width:2.2vw;height:2.2vw;max-width:40px;max-height:40px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Archivo Narrow';font-weight:800;font-size:.95vw}
+  .comp-meta{flex:1;min-width:0}
+  .comp-name{font-weight:700;font-size:.92vw}
+  .comp-tag{font-family:'Space Mono',monospace;font-size:.66vw;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-top:.2vh}
+  .comp-val{font-family:'Archivo Narrow';font-weight:800;font-size:1.15vw;text-align:right;white-space:nowrap}
+  footer{font-family:'Space Mono',monospace;font-size:.68vw;color:var(--ink-faint);display:flex;justify-content:space-between;flex:none;padding-top:.4vh}
+  .mono{font-family:'Space Mono',monospace}
+  #confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999}
+  #epicoverlay{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .5s;background:radial-gradient(ellipse at center, rgba(62,207,142,.14), rgba(18,21,26,.72) 70%)}
+  #epicoverlay.show{opacity:1}
+  #epictext{text-align:center;transform:scale(.7);transition:transform .6s cubic-bezier(.2,1.4,.4,1)}
+  #epicoverlay.show #epictext{transform:scale(1)}
+  .epic-sub{font-family:'Space Mono',monospace;font-size:1.6vw;letter-spacing:.2em;color:var(--amber);text-transform:uppercase;margin-bottom:1.5vh;animation:epicblink 1s ease-in-out infinite}
+  .epic-big{font-family:'Archivo Narrow',sans-serif;font-weight:800;font-size:11vw;line-height:.9;letter-spacing:-.01em;text-transform:uppercase;background:linear-gradient(90deg,#3ecf8e,#f2b544,#5b9df9,#ff8ad4,#3ecf8e);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:epicshine 3s linear infinite;filter:drop-shadow(0 0 22px rgba(62,207,142,.55))}
+  .epic-sub2{font-family:'Archivo Narrow';font-weight:700;font-size:2vw;color:var(--ink);margin-top:2vh;text-shadow:0 0 18px rgba(91,157,249,.6)}
+  @keyframes epicshine{0%{background-position:0% 0}100%{background-position:300% 0}}
+  @keyframes epicblink{0%,100%{opacity:1}50%{opacity:.4}}
+  #soundhint{position:fixed;bottom:2vh;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);font-family:'Space Mono',monospace;font-size:.75vw;padding:.8vh 1.2vw;border-radius:30px;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;z-index:10000}
+  #soundhint.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* pisca quando entra nota nova */
+  @keyframes flashnota{0%{box-shadow:0 0 0 0 rgba(62,207,142,.6)}100%{box-shadow:0 0 0 40px rgba(62,207,142,0)}}
+  .flash{animation:flashnota .9s ease-out}
+  /* aviso de conexão */
+  #conn{position:fixed;top:1.2vh;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.7vw;padding:.4vh 1vw;border-radius:20px;background:rgba(240,90,90,.15);color:var(--red2);border:1px solid rgba(240,90,90,.3);opacity:0;transition:opacity .3s;z-index:10000}
+  #conn.show{opacity:1}
+</style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <div class="eyebrow">Gestão à vista · Meta comercial · Boden</div>
+      <h1 id="titulo">Meta do Mês</h1>
+    </div>
+    <div class="ref">
+      <div class="day" id="refDia">—</div>
+      <div class="sub" id="refSub">—</div>
+    </div>
+  </header>
+
+  <div id="avisoMeta"></div>
+
+  <div class="status" id="status">
+    <div class="dot"></div>
+    <div class="txt"><strong id="statusStrong">Carregando…</strong> <span id="statusSpan"></span></div>
+  </div>
+
+  <div class="top">
+    <div class="card gauge-card">
+      <h2 id="gaugeTitulo">Meta do mês — B2B Avulso</h2>
+      <div class="gauge-inner">
+        <div class="gauge">
+          <svg viewBox="0 0 220 145">
+            <path d="M15 120 A95 95 0 0 1 205 120" fill="none" stroke="#252c38" stroke-width="18" stroke-linecap="round"></path>
+            <path id="arc" d="M15 120 A95 95 0 0 1 205 120" fill="none" stroke="url(#g)" stroke-width="18" stroke-linecap="round" style="stroke-dasharray: 298.493;"></path>
+            <defs><lineargradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2b544"></stop><stop offset="1" stop-color="#3ecf8e"></stop></lineargradient></defs>
+            <line id="arcPiso" x1="0" y1="0" x2="0" y2="0" stroke="#f2b544" stroke-width="3" stroke-dasharray="3 2" style="display:none"></line>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-pct" id="gaugePct">—<small style="font-size:.5em">%</small></div>
+            <div class="gauge-label">da meta avulso · <span id="metaAvLbl">—</span></div>
+          </div>
+        </div>
+        <div class="gauge-side">
+          <div class="gv"><div class="n" id="avulsoReal" style="color:var(--amber)">—</div><div class="l">Avulso realizado</div></div>
+          <div class="gv"><div class="n" id="faltaAvulso" style="color:var(--red2)">—</div><div class="l" id="faltaLbl">Falta no avulso</div></div>
+          <div class="gv" id="gvPiso"><div class="n" id="faltaPiso" style="color:var(--amber);font-size:1.15vw">—</div><div class="l" id="faltaPisoLbl">Falta pro piso (BP)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card daily-card">
+      <h2 id="dailyTitulo">Meta diária</h2>
+      <div class="daily-inner">
+        <div class="daily-left">
+          <div class="big-daily" id="bigDaily">—</div>
+          <div class="daily-sub" id="dailySub">—</div>
+        </div>
+        <div class="compare c3" id="compareBox">
+          <div id="cmpPisoBox"><div class="cn piso" id="cmpPiso">—</div><div class="cl">Piso do dia</div></div>
+          <div><div class="cn old" id="cmpMeta">—</div><div class="cl">Meta do dia</div></div>
+          <div><div class="cn" id="cmpFeito" style="color:var(--green)">—</div><div class="cl" id="cmpFeitoLbl">Feito</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card pace-card">
+    <h2>Ritmo do avulso — onde estamos vs onde deveríamos estar</h2>
+    <div class="pace-wrap">
+      <div class="pace-piso-lbl" id="pisoLbl" style="left:0%;display:none">Piso BP</div>
+      <div class="pace-track">
+        <div class="pace-fill" id="paceFill" style="width:0%"><div class="pace-inside" id="paceInside">—</div></div>
+        <div class="pace-piso" id="pacePiso" style="left:0%;display:none"></div>
+        <div class="pace-should" id="paceShould" style="left:0%" data-lbl="—"></div>
+      </div>
+    </div>
+    <div class="pace-labels"><span>R$ 0</span><span>Meta avulso do mês · <span id="paceMax">—</span></span></div>
+  </div>
+
+  <div class="bottom">
+    <div class="card weeks-card">
+      <h2>Acompanhamento semanal — avulso realizado vs meta linear</h2>
+      <div class="wk-grid" id="wkGrid"></div>
+    </div>
+
+    <div class="card comp-card">
+      <h2 id="compTitulo">Composição — frente da meta</h2>
+      <div class="comp-list">
+        <div class="comp-row">
+          <div class="comp-icon" style="background:rgba(242,181,68,.14);color:var(--amber)">F</div>
+          <div class="comp-meta"><div class="comp-name">B2B Avulso <span class="mono" style="font-size:.7vw;color:var(--ink-faint)">(1.1.62)</span></div>
+          <div class="comp-tag" id="compTag" style="color:var(--amber)">Sem previsibilidade · a meta</div></div>
+          <div class="comp-val" id="compAvulso" style="color:var(--amber)">—</div>
+        </div>
+        <div class="comp-row" id="rowFixo">
+          <div class="comp-icon" style="background:rgba(62,207,142,.14);color:var(--green)">Σ</div>
+          <div class="comp-meta"><div class="comp-name">+ Previsibilidade fixa</div>
+          <div class="comp-tag">B2C Fixo + B2B Fixo</div></div>
+          <div class="comp-val" id="compFixo" style="color:var(--green)">—</div>
+        </div>
+        <div class="comp-row" id="rowB2CFixo" style="display:none">
+          <div class="comp-icon" style="background:rgba(62,207,142,.14);color:var(--green)">F1</div>
+          <div class="comp-meta"><div class="comp-name">B2C Fixo <span class="mono" style="font-size:.7vw;color:var(--ink-faint)">(1.1.63)</span></div>
+          <div class="comp-tag">Assinaturas</div></div>
+          <div class="comp-val" id="compB2CFixo" style="color:var(--green)">—</div>
+        </div>
+        <div class="comp-row" id="rowB2BFixo" style="display:none">
+          <div class="comp-icon" style="background:rgba(91,157,249,.14);color:var(--blue)">F2</div>
+          <div class="comp-meta"><div class="comp-name">B2B Fixo <span class="mono" style="font-size:.7vw;color:var(--ink-faint)">(1.1.61)</span></div>
+          <div class="comp-tag">Abastecimentos</div></div>
+          <div class="comp-val" id="compB2BFixo" style="color:var(--blue)">—</div>
+        </div>
+        <div class="comp-row" id="rowB2CAvulso" style="display:none">
+          <div class="comp-icon" style="background:rgba(139,92,246,.14);color:#8b5cf6">F3</div>
+          <div class="comp-meta"><div class="comp-name">B2C Avulso <span class="mono" style="font-size:.7vw;color:var(--ink-faint)">(1.1.64)</span></div>
+          <div class="comp-tag">Sem esforço dedicado</div></div>
+          <div class="comp-val" id="compB2CAvulso" style="color:#8b5cf6">—</div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-icon" style="background:rgba(255,255,255,.05);color:var(--ink)">=</div>
+          <div class="comp-meta"><div class="comp-name">Total do mês</div>
+          <div class="comp-tag" id="compTotalTag">Meta do mês · Brinde e frete não contam</div></div>
+          <div class="comp-val" id="compTotal">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span id="footBase">Base: API Omie · categoria 1.1.62 · Brinde (1.1.55) excluído</span>
+    <span id="footAtualizado">Atualizado: —</span>
+  </footer>
+
+<canvas id="confetti" width="1272" height="596"></canvas>
+<div id="epicoverlay"><div id="epictext">
+  <div class="epic-sub" id="epicSub">🏆 META BATIDA 🏆</div>
+  <div class="epic-big">PARABÉNS,<br>FABÃO!</div>
+  <div class="epic-sub2" id="epicSub2">🚀</div>
+</div></div>
+<div id="soundhint">🔊 Clique na tela pra ativar o som</div>
+<div id="conn" class="show">⚠ sem conexão com os dados — mostrando último valor</div>
+
+<script>
+// ============================================================
+//  CONFIG
+// ============================================================
+const URL_DADOS = 'dados.json';   // mesmo repo do GitHub Pages
+const INTERVALO = 20000;          // relê a cada 20s
+const fmt = n => 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+const fmtK = n => 'R$ ' + (n/1000).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}) + ' mil';
+
+// ============================================================
+//  CONFETE
+// ============================================================
+const cv=document.getElementById('confetti'),ctx=cv.getContext('2d');
+let parts=[],raf=null;
+function size(){cv.width=innerWidth;cv.height=innerHeight}
+size();addEventListener('resize',size);
+const CORES=['#3ecf8e','#f2b544','#5b9df9','#eef2f7','#f05a5a','#8b5cf6','#ff8ad4','#ffd93b'];
+function criar(n,forte){for(let i=0;i<n;i++)parts.push({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.5,w:6+Math.random()*8,h:9+Math.random()*13,cor:CORES[(Math.random()*CORES.length)|0],vy:(forte?3:2.2)+Math.random()*3.4,vx:-1.8+Math.random()*3.6,rot:Math.random()*Math.PI*2,vr:-.16+Math.random()*.32,osc:Math.random()*Math.PI*2,shine:forte&&Math.random()<.35})}
+function tick(){ctx.clearRect(0,0,cv.width,cv.height);for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.osc+=.03;p.y+=p.vy;p.x+=p.vx+Math.sin(p.osc)*.9;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);if(p.shine){ctx.shadowColor=p.cor;ctx.shadowBlur=12}ctx.fillStyle=p.cor;ctx.globalAlpha=.95;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();if(p.y>cv.height+30)parts.splice(i,1)}if(parts.length)raf=requestAnimationFrame(tick);else{cancelAnimationFrame(raf);raf=null;ctx.clearRect(0,0,cv.width,cv.height)}}
+function festa(forte){criar(forte?320:160,forte);setTimeout(()=>criar(forte?260:120,forte),450);setTimeout(()=>criar(forte?220:100,forte),950);if(forte){setTimeout(()=>criar(220,true),1500);setTimeout(()=>criar(180,true),2200)}if(!raf)tick()}
+
+// ============================================================
+//  SOM
+// ============================================================
+let actx=null;
+function ctxOn(){actx=actx||new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}
+function nota(f,t0,dur,tipo,vol){const o=actx.createOscillator(),g=actx.createGain();o.type=tipo||'triangle';o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol||.28,t0+.03);g.gain.exponentialRampToValueAtTime(.001,t0+dur);o.connect(g);g.connect(actx.destination);o.start(t0);o.stop(t0+dur+.05)}
+// musiquinha curta e alegre a cada NOTA emitida (2 notas ascendentes)
+function ding(){try{ctxOn();const t=actx.currentTime+.02;nota(783.99,t,.18,'triangle',.22);nota(1046.5,t+.12,.28,'triangle',.22)}catch(e){}}
+// fanfarra da meta do dia
+function fanfarra(){try{ctxOn();const t=actx.currentTime+.05;[[523.25,0],[659.25,.12],[783.99,.24],[1046.5,.36]].forEach(([f,d])=>nota(f,t+d,.5,'triangle',.3));[523.25,659.25,783.99,1046.5].forEach(f=>nota(f,t+.62,1.1,'triangle',.16));nota(1567.98,t+.62,.9,'sine',.10)}catch(e){}}
+// fanfarra épica da meta do mês
+function fanfarraEpica(){try{ctxOn();const t=actx.currentTime+.05;[0,.3,.6,.9,1.2,1.5].forEach((d,i)=>nota(i%2?196:130.81,t+d,.28,'sawtooth',.12));[[523.25,0],[659.25,.14],[783.99,.28],[1046.5,.42],[1318.5,.56],[1568,.70],[2093,.84]].forEach(([f,d])=>nota(f,t+d,.45,'triangle',.26));const tf=t+1.05;[261.63,329.63,392,523.25,659.25,783.99,1046.5].forEach(f=>nota(f,tf,1.8,'triangle',.13));nota(2093,tf,1.6,'sine',.08);for(let i=0;i<10;i++)nota(1568+Math.random()*900,tf+.1+i*.12,.3,'sine',.06)}catch(e){}}
+function falaParabens(){try{if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance('Parabéns, Fabão! Meta batida!');u.lang='pt-BR';u.rate=.95;u.pitch=1.15;const vs=speechSynthesis.getVoices().filter(v=>/pt/i.test(v.lang));if(vs[0])u.voice=vs[0];speechSynthesis.speak(u)}catch(e){}}
+
+const overlay=document.getElementById('epicoverlay'),hint=document.getElementById('soundhint'),conn=document.getElementById('conn');
+function mostraOverlay(sub,sub2){document.getElementById('epicSub').textContent=sub;document.getElementById('epicSub2').textContent=sub2;overlay.classList.add('show');setTimeout(()=>overlay.classList.remove('show'),7000)}
+
+// libera áudio no primeiro toque (TV bloqueia autoplay)
+let audioLiberado=false;
+function liberaAudio(){audioLiberado=true;ctxOn();ding();hint.classList.remove('show')}
+addEventListener('click',liberaAudio,{once:true});addEventListener('keydown',liberaAudio,{once:true});
+
+// ============================================================
+//  RENDER
+// ============================================================
+const arc=document.getElementById('arc');
+const arcLen=arc.getTotalLength();
+arc.style.strokeDasharray=arcLen;
+
+function render(d){
+  const temPiso = typeof d.pisoAvulso === 'number';
+  const COR = {verde:'var(--green)', amarelo:'var(--amber)', vermelho:'var(--red2)'};
+
+  // header
+  const dt=new Date(d.data+'T12:00:00');
+  const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  document.getElementById('refDia').textContent=dias[dt.getDay()]+', '+d.data.slice(8,10)+'/'+d.data.slice(5,7);
+  let sub=d.nFechados+' dias úteis fechados · '+d.nRestantes+' restantes';
+  if(d.feriadosNoMes && d.feriadosNoMes.length) sub+=' · feriados: '+d.feriadosNoMes.map(f=>f.slice(8,10)+'/'+f.slice(5,7)).join(', ');
+  document.getElementById('refSub').textContent=sub;
+
+  // aviso de meta não cadastrada
+  const av=document.getElementById('avisoMeta');
+  if(d.metaCadastrada===false){
+    av.style.display='block';
+    av.textContent='⚠ Meta deste mês ainda não cadastrada no n8n — usando a meta de '+d.mesDaMeta.slice(5,7)+'/'+d.mesDaMeta.slice(0,4)+'.';
+  } else av.style.display='none';
+
+  // gauge (contra a meta comercial do avulso)
+  const pct=Math.min(d.pctAvulso,100);
+  const g=document.getElementById('gaugePct');
+  g.innerHTML=Math.round(d.pctAvulso)+'<small style="font-size:.5em">%</small>';
+  g.style.color=d.metaMesBatida?'var(--green)':'var(--ink)';
+  document.getElementById('metaAvLbl').textContent=fmtK(d.metaAvulso);
+  document.getElementById('avulsoReal').textContent=fmt(d.totalAvulso);
+  if(d.metaMesBatida){
+    document.getElementById('faltaAvulso').textContent='+'+fmt(d.totalAvulso-d.metaAvulso);
+    document.getElementById('faltaAvulso').style.color='var(--green)';
+    document.getElementById('faltaLbl').textContent='Excedente no avulso';
+  }else{
+    document.getElementById('faltaAvulso').textContent=fmt(d.falta);
+    document.getElementById('faltaAvulso').style.color='var(--red2)';
+    document.getElementById('faltaLbl').textContent='Falta pra meta';
+  }
+  arc.style.transition='stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)';
+  arc.style.strokeDashoffset=arcLen*(1-pct/100);
+
+  // piso no gauge e ao lado
+  const arcPiso=document.getElementById('arcPiso');
+  const gvPiso=document.getElementById('gvPiso');
+  if(temPiso){
+    const p=arc.getPointAtLength(arcLen*Math.min(d.pctPiso,100)/100);
+    const cx=110, cy=120, dx=p.x-cx, dy=p.y-cy, len=Math.hypot(dx,dy)||1;
+    arcPiso.setAttribute('x1', p.x-dx/len*13); arcPiso.setAttribute('y1', p.y-dy/len*13);
+    arcPiso.setAttribute('x2', p.x+dx/len*13); arcPiso.setAttribute('y2', p.y+dy/len*13);
+    arcPiso.style.display='';
+    gvPiso.style.display='';
+    if(d.pisoMesBatido){
+      document.getElementById('faltaPiso').textContent='✓ '+fmt(d.pisoAvulso);
+      document.getElementById('faltaPiso').style.color='var(--green)';
+      document.getElementById('faltaPisoLbl').textContent='Piso (BP) garantido';
+    }else{
+      document.getElementById('faltaPiso').textContent=fmt(d.faltaPiso);
+      document.getElementById('faltaPiso').style.color='var(--amber)';
+      document.getElementById('faltaPisoLbl').textContent='Falta pro piso (BP) · '+fmtK(d.pisoAvulso);
+    }
+  } else { arcPiso.style.display='none'; gvPiso.style.display='none'; }
+
+  // meta do dia
+  const big=document.getElementById('bigDaily');
+  if(d.metaMesBatida){
+    document.getElementById('dailyTitulo').textContent='META DO MÊS BATIDA 🏆';
+    big.textContent=Math.round((d.totalAvulso+d.fixoPrevisto)/d.metaMes*1000)/10+'%';
+    big.style.color='var(--green)';
+    document.getElementById('dailySub').innerHTML='Meta do mês batida! Total <b>'+fmt(d.totalAvulso+d.fixoPrevisto)+'</b> de '+fmt(d.metaMes)+'.';
+  }else if(d.hojeEhUtil===false){
+    document.getElementById('dailyTitulo').textContent='Hoje não é dia útil';
+    big.textContent=fmt(d.metaDia);
+    big.style.color='var(--ink-dim)';
+    document.getElementById('dailySub').innerHTML='Meta do próximo dia útil'+(temPiso?' · piso <b>'+fmt(d.metaDiaPiso)+'</b>':'')+'. O que sair hoje já conta.';
+  }else if(d.metaDiaBatida){
+    document.getElementById('dailyTitulo').textContent='Meta de hoje — batida 🎉';
+    big.textContent='+'+fmt(d.feitoHoje-d.metaDia);
+    big.style.color='var(--green)';
+    document.getElementById('dailySub').innerHTML='Dia bateu a régua. Feito <b>'+fmt(d.feitoHoje)+'</b> de '+fmt(d.metaDia)+'.';
+  }else if(temPiso && d.pisoDiaBatido){
+    document.getElementById('dailyTitulo').textContent='Piso de hoje garantido — falta pra meta';
+    big.textContent=fmt(d.faltaHoje);
+    big.style.color='var(--amber)';
+    document.getElementById('dailySub').innerHTML='Piso do dia batido. Meta do dia <b>'+fmt(d.metaDia)+'</b> · já saíram <b>'+fmt(d.feitoHoje)+'</b>.';
+  }else{
+    document.getElementById('dailyTitulo').textContent='Falta hoje pra fechar na régua';
+    big.textContent=fmt(d.faltaHoje);
+    big.style.color=temPiso?'var(--red2)':'var(--amber)';
+    document.getElementById('dailySub').innerHTML='Meta do dia <b>'+fmt(d.metaDia)+'</b>'+(temPiso?' · piso <b>'+fmt(d.metaDiaPiso)+'</b> (faltam '+fmt(d.faltaHojePiso)+')':'')+' · já saíram <b>'+fmt(d.feitoHoje)+'</b>.';
+  }
+  document.getElementById('cmpPisoBox').style.display=temPiso?'':'none';
+  if(temPiso) document.getElementById('cmpPiso').textContent=fmt(d.metaDiaPiso);
+  document.getElementById('cmpMeta').textContent=fmt(d.metaDia);
+  document.getElementById('cmpFeito').textContent=fmt(d.feitoHoje);
+  document.getElementById('cmpFeito').style.color=temPiso?COR[d.statusDia]:(d.metaDiaBatida?'var(--green)':'var(--amber)');
+  document.getElementById('cmpFeitoLbl').textContent='Feito · '+Math.round(d.metaDia>0?d.feitoHoje/d.metaDia*100:0)+'%';
+
+  // ritmo
+  const fillW=Math.min(d.totalAvulso/d.metaAvulso*100,100);
+  const shouldL=Math.min(d.deveriaHoje/d.metaAvulso*100,100);
+  const fill=document.getElementById('paceFill');
+  fill.style.width=fillW+'%';
+  if(temPiso){
+    const c={verde:['62,207,142','var(--green)'],amarelo:['242,181,68','var(--amber)'],vermelho:['240,90,90','var(--red2)']}[d.statusMes];
+    fill.style.background='linear-gradient(90deg,rgba('+c[0]+',.35),rgba('+c[0]+',.8))';
+    fill.style.borderRightColor=c[1];
+    const pl=Math.min(d.pctPiso,100);
+    document.getElementById('pacePiso').style.left=pl+'%';
+    document.getElementById('pacePiso').style.display='';
+    const lbl=document.getElementById('pisoLbl');
+    lbl.style.left=pl+'%'; lbl.style.display='';
+    lbl.textContent='Piso BP · '+fmtK(d.pisoAvulso);
+  }
+  const pin=document.getElementById('paceInside');
+  pin.textContent=fmtK(d.totalAvulso);
+  if(fillW<9){
+    const ref=Math.max(shouldL,fillW);
+    pin.style.left = fillW>0.5 ? 'calc('+(ref/fillW*100)+'% + 12px)' : 'calc(12px + '+ref+'vw)';
+    pin.style.color='var(--ink)';
+  }
+  else{pin.style.left='12px';pin.style.color='#0c130f';}
+  const ps=document.getElementById('paceShould');
+  ps.style.left=shouldL+'%';
+  ps.setAttribute('data-lbl','Deveria estar · '+fmtK(d.deveriaHoje));
+  document.getElementById('paceMax').textContent=fmt(d.metaAvulso);
+
+  // faixa de status
+  const st=document.getElementById('status');
+  const status=temPiso?d.statusMes:((d.totalAvulso>=d.deveriaHoje||d.metaMesBatida)?'verde':'vermelho');
+  st.className='status'+(status==='verde'?' status-good':status==='amarelo'?' status-mid':'');
+  if(d.metaMesBatida){
+    document.getElementById('statusStrong').textContent='META DO MÊS BATIDA! 🏆';
+    document.getElementById('statusSpan').textContent='Avulso em '+fmt(d.totalAvulso)+' — meta de '+fmt(d.metaAvulso)+' superada.';
+  }else if(status==='verde'){
+    document.getElementById('statusStrong').textContent='No ritmo da meta — '+Math.round(d.pctAvulso)+'% da meta.';
+    document.getElementById('statusSpan').textContent='Avulso em '+fmt(d.totalAvulso)+', acima do previsto ('+fmt(d.deveriaHoje)+'). Faltam '+fmt(d.falta)+' em '+d.nRestantes+' dias úteis.';
+  }else if(status==='amarelo'){
+    document.getElementById('statusStrong').textContent='Acima do piso, abaixo da meta.';
+    document.getElementById('statusSpan').textContent='Está em '+fmt(d.totalAvulso)+'. Pra meta, deveria estar em '+fmt(d.deveriaHoje)+'. Faltam '+fmt(d.falta)+' em '+d.nRestantes+' dias úteis.';
+  }else{
+    document.getElementById('statusStrong').textContent=temPiso?'Abaixo do ritmo do piso.':'Abaixo do ritmo necessário.';
+    document.getElementById('statusSpan').textContent=temPiso
+      ? 'Está em '+fmt(d.totalAvulso)+'. Só pro piso, deveria estar em '+fmt(d.deveriaHojePiso)+' (meta: '+fmt(d.deveriaHoje)+'). Faltam '+fmt(d.falta)+' em '+d.nRestantes+' dias úteis.'
+      : 'Deveria estar em '+fmt(d.deveriaHoje)+', está em '+fmt(d.totalAvulso)+'. Faltam '+fmt(d.falta)+' em '+d.nRestantes+' dias úteis.';
+  }
+
+  // semanas
+  const gr=document.getElementById('wkGrid');gr.innerHTML='';
+  gr.style.gridTemplateColumns='repeat('+d.semanas.length+',1fr)';
+  const perAntigo=['01–05','06–12','13–19','20–26','27–31'];
+  const dia=dt.getDate();
+  const semAtualAntigo=dia<=5?1:dia<=12?2:dia<=19?3:dia<=26?4:5;
+  d.semanas.forEach(s=>{
+    const dif=Math.round(s.pct-100);
+    let st2=s.status;
+    if(!st2){ // dados antigos
+      st2=s.pct>=100?'verde':s.semana===semAtualAntigo?'atual':s.real>0?'vermelho':'aberta';
+    }
+    if(d.metaMesBatida && st2==='atual') st2=s.real>=s.meta?'verde':'amarelo';
+    let badge,cls='',cor;
+    if(st2==='verde'){badge='<span class="wk-badge b-done">+'+dif+'%</span>';cls=' wk-win';cor='var(--green)';}
+    else if(st2==='atual'){badge='<span class="wk-badge b-now">Atual</span>';cor='var(--blue)';}
+    else if(st2==='amarelo'){badge='<span class="wk-badge b-mid">'+(s.situacao==='atual'?'Piso ✓':dif+'%')+'</span>';cls=' wk-mid';cor='var(--amber)';}
+    else if(st2==='vermelho'){badge='<span class="wk-badge b-under">'+dif+'%</span>';cor='var(--red2)';}
+    else{badge='<span class="wk-badge b-open">Aberta</span>';cor='var(--ink-faint)';}
+    const w=Math.min(s.pct,100);
+    const realCor=st2==='verde'?'style="color:var(--green)"':'';
+    const periodo=s.periodo||perAntigo[s.semana-1];
+    const pisoTxt=(typeof s.piso==='number')?'<div class="wk-piso">piso '+fmt(s.piso)+'</div>':'';
+    const pisoMark=(typeof s.piso==='number'&&s.meta>0)?'<i style="position:absolute;top:-2px;bottom:-2px;left:'+(s.piso/s.meta*100)+'%;border-left:2px solid var(--amber)"></i>':'';
+    gr.innerHTML+='<div class="wk'+cls+'"><div class="wk-head"><span class="wk-num">Sem '+s.semana+'<br>'+periodo+'</span>'+badge+'</div><div><div class="wk-real" '+realCor+'>'+fmt(s.real)+'</div><div class="wk-of">de '+fmt(s.meta)+'</div>'+pisoTxt+'<div class="wk-bar" style="position:relative;overflow:visible"><span style="width:'+w+'%;background:'+cor+'"></span>'+pisoMark+'</div></div></div>';
+  });
+
+  // composição
+  document.getElementById('compAvulso').textContent=fmt(d.totalAvulso);
+  document.getElementById('compAvulso').style.color=d.metaMesBatida?'var(--green)':'var(--amber)';
+  document.getElementById('compTag').textContent=d.metaMesBatida?'Sem previsibilidade · meta batida ✓':'Sem previsibilidade · a meta';
+  document.getElementById('compTag').style.color=d.metaMesBatida?'var(--green)':'var(--amber)';
+
+  const fech = d.fechamento || {};
+  const ehFechamento = !!fech.ehUltimoDia;
+  const rowFixo     = document.getElementById('rowFixo');
+  const rowB2CFixo  = document.getElementById('rowB2CFixo');
+  const rowB2BFixo  = document.getElementById('rowB2BFixo');
+  const rowB2CAvulso= document.getElementById('rowB2CAvulso');
+  let total;
+  if(ehFechamento){
+    document.getElementById('compTitulo').textContent='Composição — fechamento real';
+    rowFixo.style.display='none';
+    rowB2CFixo.style.display=''; rowB2BFixo.style.display=''; rowB2CAvulso.style.display='';
+    document.getElementById('compB2CFixo').textContent=fmt(fech.b2cFixo||0);
+    document.getElementById('compB2BFixo').textContent=fmt(fech.b2bFixo||0);
+    document.getElementById('compB2CAvulso').textContent=fmt(fech.b2cAvulso||0);
+    total = d.totalAvulso + (fech.b2cFixo||0) + (fech.b2bFixo||0) + (fech.b2cAvulso||0);
+  } else {
+    document.getElementById('compTitulo').textContent='Composição — frente da meta';
+    rowFixo.style.display='';
+    rowB2CFixo.style.display='none'; rowB2BFixo.style.display='none'; rowB2CAvulso.style.display='none';
+    document.getElementById('compFixo').textContent=fmt(d.fixoPrevisto);
+    total = d.totalAvulso + d.fixoPrevisto;
+  }
+  document.getElementById('compTotal').textContent=fmt(total);
+  document.getElementById('compTotal').style.color = total>=d.metaMes ? 'var(--green)' : (temPiso && total>=d.pisoMes ? 'var(--amber)' : 'var(--ink)');
+  document.getElementById('compTotalTag').textContent = temPiso
+    ? 'de '+fmt(d.metaMes)+' · piso BP '+fmt(d.pisoMes)
+    : 'Meta do mês · Brinde e frete não contam';
+
+  // rodapé
+  const at=new Date(d.atualizadoEm);
+  document.getElementById('footAtualizado').textContent='Atualizado: '+at.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+  if(temPiso) document.getElementById('footBase').textContent='Base: API Omie · categoria 1.1.62 · Brinde e frete não contam · feriados nacionais descontados';
+}
+
+// ============================================================
+//  LOOP DE ATUALIZAÇÃO — detecta nota nova e comemora
+// ============================================================
+let totalAnterior=null, metaDiaBatidaAntes=false, metaMesBatidaAntes=false;
+
+async function puxar(){
+  try{
+    const r=await fetch(URL_DADOS+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('http '+r.status);
+    const d=await r.json();
+    conn.classList.remove('show');
+    render(d);
+
+    // ----- DETECÇÃO DE NOTA NOVA -----
+    if(totalAnterior!==null && d.totalAvulso>totalAnterior+0.01){
+      // entrou faturamento novo → musiquinha + flash
+      if(audioLiberado) ding();
+      document.querySelector('.gauge-card').classList.add('flash');
+      setTimeout(()=>document.querySelector('.gauge-card').classList.remove('flash'),900);
+
+      // marco: meta do DIA batida agora (confete normal)
+      if(d.metaDiaBatida && !metaDiaBatidaAntes && !d.metaMesBatida){
+        festa(false); if(audioLiberado) fanfarra();
+      }
+      // marco: meta do MÊS batida agora (festa épica)
+      if(d.metaMesBatida && !metaMesBatidaAntes){
+        festa(true);
+        mostraOverlay('🏆 META DO MÊS BATIDA 🏆', fmt(d.totalAvulso+d.fixoPrevisto)+' de '+fmt(d.metaMes)+' 🚀');
+        if(audioLiberado){ fanfarraEpica(); setTimeout(falaParabens,1400); }
+      }
+    }
+    totalAnterior=d.totalAvulso;
+    metaDiaBatidaAntes=d.metaDiaBatida;
+    metaMesBatidaAntes=d.metaMesBatida;
+
+    // se áudio ainda não liberado, mostra o aviso
+    if(!audioLiberado) hint.classList.add('show');
+  }catch(e){
+    conn.classList.add('show');   // mostra "sem conexão", mantém último valor
+  }
+}
+
+puxar();
+setInterval(puxar, INTERVALO);
+</script>
+
+
+</body></html>

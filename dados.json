@@ -1,0 +1,108 @@
+{
+  "versao": 2,
+  "atualizadoEm": "2026-11-04T20:38:33.014Z",
+  "data": "2026-11-04",
+  "mesDaMeta": "2026-11",
+  "metaCadastrada": true,
+  "metaMes": 150000,
+  "pisoMes": 106000,
+  "metaAvulso": 142000,
+  "pisoAvulso": 98000,
+  "fixoPrevisto": 8000,
+  "fechamento": {
+    "ehUltimoDia": false,
+    "b2cFixo": 123.49,
+    "b2bFixo": 0,
+    "b2cAvulso": 0,
+    "fixoReal": 123.49
+  },
+  "totalAvulso": 8547.5,
+  "totalComFixo": 16547.5,
+  "falta": 133452.5,
+  "faltaPiso": 89452.5,
+  "pctAvulso": 6.019366197183099,
+  "pctPiso": 69.01408450704226,
+  "metaMesBatida": false,
+  "pisoMesBatido": false,
+  "statusMes": "vermelho",
+  "deveriaHoje": 14947.37,
+  "deveriaHojePiso": 10315.79,
+  "hojeEhUtil": true,
+  "feitoHoje": 1582.5,
+  "metaDia": 7501.94,
+  "metaDiaPiso": 5057.5,
+  "faltaHoje": 5919.44,
+  "faltaHojePiso": 3475,
+  "metaDiaBatida": false,
+  "pisoDiaBatido": false,
+  "statusDia": "vermelho",
+  "nFechados": 1,
+  "nRestantes": 18,
+  "totalUteis": 19,
+  "feriadosNoMes": [
+    "2026-11-02",
+    "2026-11-20"
+  ],
+  "semanaAtual": 1,
+  "semanas": [
+    {
+      "semana": 1,
+      "periodo": "02–06/11",
+      "diasUteis": 4,
+      "situacao": "atual",
+      "status": "atual",
+      "real": 8547.5,
+      "meta": 29894.74,
+      "piso": 20631.58,
+      "pct": 28.59198943661972
+    },
+    {
+      "semana": 2,
+      "periodo": "09–13/11",
+      "diasUteis": 5,
+      "situacao": "aberta",
+      "status": "aberta",
+      "real": 0,
+      "meta": 37368.42,
+      "piso": 25789.47,
+      "pct": 0
+    },
+    {
+      "semana": 3,
+      "periodo": "16–20/11",
+      "diasUteis": 4,
+      "situacao": "aberta",
+      "status": "aberta",
+      "real": 0,
+      "meta": 29894.74,
+      "piso": 20631.58,
+      "pct": 0
+    },
+    {
+      "semana": 4,
+      "periodo": "23–27/11",
+      "diasUteis": 5,
+      "situacao": "aberta",
+      "status": "aberta",
+      "real": 0,
+      "meta": 37368.42,
+      "piso": 25789.47,
+      "pct": 0
+    },
+    {
+      "semana": 5,
+      "periodo": "30/11",
+      "diasUteis": 1,
+      "situacao": "aberta",
+      "status": "aberta",
+      "real": 0,
+      "meta": 7473.68,
+      "piso": 5157.89,
+      "pct": 0
+    }
+  ],
+  "porDia": {
+    "2026-11-03": 6965,
+    "2026-11-04": 1582.5
+  }
+}
