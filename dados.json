@@ -1,6 +1,6 @@
 {
   "versao": 2,
-  "atualizadoEm": "2026-11-06T21:35:14.546Z",
+  "atualizadoEm": "2026-11-06T21:40:41.377Z",
   "data": "2026-11-06",
   "mesDaMeta": "2026-11",
   "metaCadastrada": true,
@@ -63,7 +63,7 @@
       "situacao": "aberta",
       "status": "aberta",
       "real": 0,
-      "meta": 32105.26,
+      "meta": 34286.09,
       "piso": null,
       "pct": 0
     },
@@ -74,7 +74,7 @@
       "situacao": "aberta",
       "status": "aberta",
       "real": 0,
-      "meta": 25684.21,
+      "meta": 27428.88,
       "piso": null,
       "pct": 0
     },
@@ -85,7 +85,7 @@
       "situacao": "aberta",
       "status": "aberta",
       "real": 0,
-      "meta": 32105.26,
+      "meta": 34286.09,
       "piso": null,
       "pct": 0
     },
@@ -96,7 +96,7 @@
       "situacao": "aberta",
       "status": "aberta",
       "real": 0,
-      "meta": 6421.05,
+      "meta": 6857.22,
       "piso": null,
       "pct": 0
     }
