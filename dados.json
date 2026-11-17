@@ -1,6 +1,6 @@
 {
   "versao": 2,
-  "atualizadoEm": "2026-11-17T14:03:29.521Z",
+  "atualizadoEm": "2026-11-17T14:09:37.403Z",
   "data": "2026-11-17",
   "mesDaMeta": "2026-11",
   "metaCadastrada": true,
@@ -28,11 +28,11 @@
   "deveriaHoje": 70631.58,
   "deveriaHojePiso": 70631.58,
   "hojeEhUtil": true,
-  "feitoHoje": 0,
-  "metaDia": 9463.91,
-  "metaDiaPiso": 9463.91,
-  "faltaHoje": 9463.91,
-  "faltaHojePiso": 9463.91,
+  "feitoHoje": 1545,
+  "metaDia": 9635.58,
+  "metaDiaPiso": 9635.58,
+  "faltaHoje": 8090.58,
+  "faltaHojePiso": 8090.58,
   "metaDiaBatida": false,
   "pisoDiaBatido": false,
   "statusDia": "vermelho",
@@ -85,7 +85,7 @@
       "situacao": "aberta",
       "status": "aberta",
       "real": 0,
-      "meta": 47319.55,
+      "meta": 48177.88,
       "piso": null,
       "pct": 0
     },
@@ -96,7 +96,7 @@
       "situacao": "aberta",
       "status": "aberta",
       "real": 0,
-      "meta": 9463.91,
+      "meta": 9635.58,
       "piso": null,
       "pct": 0
     }
@@ -111,6 +111,7 @@
     "2026-11-11": 1743,
     "2026-11-12": 6768.81,
     "2026-11-13": 1559,
-    "2026-11-16": 3303
+    "2026-11-17": 1545,
+    "2026-11-16": 1758
   }
 }
