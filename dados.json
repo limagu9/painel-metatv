@@ -1,6 +1,6 @@
 {
   "versao": 2,
-  "atualizadoEm": "2026-11-18T15:57:22.516Z",
+  "atualizadoEm": "2026-11-18T15:59:02.548Z",
   "data": "2026-11-18",
   "mesDaMeta": "2026-11",
   "metaCadastrada": true,
@@ -11,10 +11,10 @@
   "fixoPrevisto": 8000,
   "fechamento": {
     "ehUltimoDia": false,
-    "b2cFixo": 2216.2,
+    "b2cFixo": 2339.36,
     "b2bFixo": 0,
     "b2cAvulso": 86.4,
-    "fixoReal": 2216.2
+    "fixoReal": 2339.36
   },
   "totalAvulso": 39291.81,
   "totalComFixo": 47291.81,
